@@ -28,5 +28,5 @@ public interface FilmService {
 
     void addCategoryToFilm(Integer idFilm, Integer idCategory);
 
-
+    public List<FilmDto> searchFilms(String title);
 }

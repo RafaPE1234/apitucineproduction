@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,5 +177,19 @@ public class FilmServiceImpl implements FilmService {
         if (filmRepository.existsFilmByTitle(title)) {
             throw new ValidationException("No se puede agregar la película, puesto que una con su mismo titulo ya existe");
         }
+    }
+    public List<FilmDto> searchFilms(String title) {
+        // Convert search term to lowercase for case-insensitive search
+        String searchTerm = title.toLowerCase();
+
+        // Retrieve movies from the data source (e.g., database)
+        List<Film> films = filmRepository.findFilmsByTitleContainingIgnoreCase(searchTerm);
+
+        // Use ModelMapper to convert Film objects to FilmDto objects
+        List<FilmDto> filmDtos = films.stream()
+                .map(film -> modelMapper.map(film, FilmDto.class))
+                .collect(Collectors.toList());
+
+        return filmDtos;
     }
 }
